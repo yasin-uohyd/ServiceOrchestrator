@@ -58,15 +58,19 @@ namespace ServiceOrchestrator
             _logger.LogInformation("Consume Scoped Service Hosted Service is working.");
 
             _connection.On("EXEC",
-                (string eventName, string clientId, TaskParams message) =>
+                (string eventName, string clientId, ServiceParams message) =>
                 {
                     using (var scope = Services.CreateScope())
                     {
                         var tasks = scope.ServiceProvider.GetServices<ITask>();
                         foreach (var task in tasks)
                         {
+                            var test = scope.ServiceProvider.GetRequiredService<IServiceCoordinator>();
                             var methodInfo = task.GetType().GetMethod(eventName);
-                            methodInfo.Invoke(task, new[] { message });
+                            if (methodInfo != null)
+                            {
+                                methodInfo.Invoke(task, new[] { message });
+                            }
                         }
                     }
                 });

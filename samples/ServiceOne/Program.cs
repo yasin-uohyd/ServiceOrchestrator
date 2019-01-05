@@ -12,10 +12,14 @@ namespace ServiceOne
 
             hostBuilder.Build((hostBuilderConext, serviceCollection) =>
             {
-                serviceCollection.AddScoped<ITask, Task1>();
+                serviceCollection.AddScoped<ITask, ServiceOneTaskOne>();
             });
 
             await hostBuilder.StartAsync();
+            //Just to Start the Flow
+            await new ServiceCoordinator().Raise<CustomServiceOneEvent>(null);
+
+            await hostBuilder.WaitForShutdownAsync();
         }
     }
 }

@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using ServiceOrchestrator.Events;
 
-namespace ServiceOne
+namespace ServiceTwo.Events
 {
-    public class CustomServiceEvent : IServiceEvent
+    class CustomServiceTwoEvent : IServiceEvent
     {
+        public CustomServiceTwoEvent()
+        {
+            Name = "ServiceOneMethodOne";
+        }
+
         public Guid CorrelationId { get; set; }
 
         public string Name { get; set; }

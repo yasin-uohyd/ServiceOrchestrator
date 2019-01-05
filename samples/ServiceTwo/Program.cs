@@ -1,12 +1,22 @@
-﻿using System;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using ServiceOrchestrator.Core;
+using ServiceTwo.Tasks;
 
 namespace ServiceTwo
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var hostBuilder = new ServiceHostBuilder();
+
+            hostBuilder.Build((hostBuilderConext, serviceCollection) =>
+            {
+                serviceCollection.AddScoped<ITask, ServiceTwoTaskOne>();
+            });
+
+            await hostBuilder.StartAsyncAndWait();
         }
     }
 }

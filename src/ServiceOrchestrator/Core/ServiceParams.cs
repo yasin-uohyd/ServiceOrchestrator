@@ -1,6 +1,6 @@
 ﻿namespace ServiceOrchestrator.Core
 {
-    public class TaskParams
+    public class ServiceParams
     {
         public string Message { get; set; }
     }

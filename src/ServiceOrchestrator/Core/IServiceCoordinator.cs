@@ -1,7 +1,10 @@
-﻿namespace ServiceOrchestrator.Core
+﻿using System.Threading.Tasks;
+using ServiceOrchestrator.Events;
+
+namespace ServiceOrchestrator.Core
 {
     public interface IServiceCoordinator
     {
-        void Raise<T>(object[] data) where T : IServiceCoordinator;
+        Task Raise<T>(object[] data) where T : IServiceEvent, new();
     }
 }

@@ -19,6 +19,7 @@ namespace ServiceOrchestrator.Core
                                 (hostContext, services) =>
                                 {
                                     services.AddHostedService<OrchestrationService>();
+                                    services.AddScoped<IServiceCoordinator, ServiceCoordinator>();
                                 })
                             .UseConsoleLifetime();
         }
@@ -30,9 +31,19 @@ namespace ServiceOrchestrator.Core
             return host;
         }
 
+        public async Task StartAsyncAndWait()
+        {
+            await host.StartAsync();
+            await host.WaitForShutdownAsync();
+        }
+
         public async Task StartAsync()
         {
             await host.StartAsync();
+        }
+
+        public async Task WaitForShutdownAsync()
+        {
             await host.WaitForShutdownAsync();
         }
     }
