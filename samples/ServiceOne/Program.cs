@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using ServiceOrchestrator.Core;
 
 namespace ServiceOne
@@ -10,12 +10,12 @@ namespace ServiceOne
         {
             var hostBuilder = new ServiceHostBuilder();
 
+            hostBuilder.Build((hostBuilderConext, serviceCollection) =>
+            {
+                serviceCollection.AddScoped<ITask, Task1>();
+            });
+
             await hostBuilder.StartAsync();
-
-            Console.WriteLine("Client started...");
-            Console.ReadLine();
-
-            await hostBuilder.DisposeAsync();
         }
     }
 }
