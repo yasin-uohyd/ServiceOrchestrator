@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Threading.Tasks;
+using ServiceOrchestrator.Core;
 
 namespace ServiceOne
 {
     class Program
     {
-        static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var hostBuilder = new ServiceHostBuilder();
+
+            await hostBuilder.StartAsync();
+
+            Console.WriteLine("Client started...");
+            Console.ReadLine();
+
+            await hostBuilder.DisposeAsync();
         }
     }
 }

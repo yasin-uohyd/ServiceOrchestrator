@@ -3,6 +3,17 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ServiceOrchestrator\ServiceOrchestrator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="service.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>
