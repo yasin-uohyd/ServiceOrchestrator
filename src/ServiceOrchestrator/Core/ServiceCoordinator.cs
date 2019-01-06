@@ -25,7 +25,7 @@ namespace ServiceOrchestrator.Core
             httpClient = new HttpClient();
         }
 
-        public async Task Raise<T>(object[] data) where T : IServiceEvent, new()
+        public async Task Raise<T>(object data) where T : IServiceEvent, new()
         {
             var defaultPayloadMessage = new PayloadMessage
             {
@@ -34,7 +34,7 @@ namespace ServiceOrchestrator.Core
                 {
                     new T().Name,
                     serverName ,
-                    new ServiceParams {Message="Hello from Mars"}
+                    data
                 }
             };
 

@@ -15,9 +15,11 @@ namespace ServiceTwo.Tasks
 
         public void ServiceTwoMethodOne(ServiceParams taskParams)
         {
-            Console.WriteLine($"[{DateTime.Now.ToString()}] ServiceTwo: MethodOne: Received message from Mars: {taskParams.Message}");
+            Console.WriteLine($"[{DateTime.Now.ToString()}] Service One: MethodOne: Received message from Mars: {taskParams.Message}, count {taskParams.Count}");
 
-            serviceCoordinator.Raise<CustomServiceTwoEvent>(null).Wait();
+            taskParams.Count++;
+
+            serviceCoordinator.Raise<CustomServiceTwoEvent>(taskParams).Wait();
         }
     }
 }

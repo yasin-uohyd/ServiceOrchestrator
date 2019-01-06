@@ -5,6 +5,6 @@ namespace ServiceOrchestrator.Core
 {
     public interface IServiceCoordinator
     {
-        Task Raise<T>(object[] data) where T : IServiceEvent, new();
+        Task Raise<T>(object data) where T : IServiceEvent, new();
     }
 }

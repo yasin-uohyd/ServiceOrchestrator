@@ -14,9 +14,11 @@ namespace ServiceOne
 
         public void ServiceOneMethodOne(ServiceParams taskParams)
         {
-            Console.WriteLine($"[{DateTime.Now.ToString()}] MethodOne: Received message from Mars: {taskParams.Message}");
+            Console.WriteLine($"[{DateTime.Now.ToString()}] Service One: MethodOne: Received message from Mars: {taskParams.Message}, count {taskParams.Count}");
 
-            serviceCoordinator.Raise<CustomServiceOneEvent>(null).Wait();
+            taskParams.Count++;
+
+            serviceCoordinator.Raise<CustomServiceOneEvent>(taskParams).Wait();
         }
     }
 }
