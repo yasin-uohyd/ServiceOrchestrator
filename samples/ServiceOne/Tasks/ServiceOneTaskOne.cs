@@ -16,7 +16,7 @@ namespace ServiceOne
         {
             Console.WriteLine($"[{DateTime.Now.ToString()}] MethodOne: Received message from Mars: {taskParams.Message}");
 
-            (new ServiceCoordinator().Raise<CustomServiceOneEvent>(null)).Wait();
+            serviceCoordinator.Raise<CustomServiceOneEvent>(null).Wait();
         }
     }
 }

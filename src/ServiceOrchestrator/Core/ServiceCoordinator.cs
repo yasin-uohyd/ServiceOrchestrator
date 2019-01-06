@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,41 +12,38 @@ namespace ServiceOrchestrator.Core
 {
     public class ServiceCoordinator : IServiceCoordinator
     {
+        private readonly HttpClient httpClient;
+
         private readonly Security security;
         private readonly string serverName;
         private readonly string hubName = "Communicator";
-        private readonly PayloadMessage _defaultPayloadMessage;
 
-        public ServiceCoordinator()
+        public ServiceCoordinator(IConfiguration configuration)
         {
-            //var configuration = new ConfigurationBuilder()
-            //        .SetBasePath(Directory.GetCurrentDirectory())
-            //        .AddJsonFile("service.json", false, true)
-            //        .Build();
-
-            //security = new Security(configuration["Azure:SignalR:ConnectionString"]);
-            //serverName = GenerateServerName();
+            security = new Security(configuration["Azure:SignalR:ConnectionString"]);
+            serverName = GenerateServerName();
+            httpClient = new HttpClient();
         }
 
         public async Task Raise<T>(object[] data) where T : IServiceEvent, new()
         {
-            await new TaskHandler("Endpoint=https://winterready.service.signalr.net;AccessKey=UE7ehbJLmslL/KBL+zUokZ+uJ5U8guNiR+UilZtE1go=;Version=1.0;").Send(new T().Name);
-            //using (var httpClient = new HttpClient())
-            //{
-            //    var defaultPayloadMessage = new PayloadMessage
-            //    {
-            //        Target = "EXEC",
-            //        Arguments = new object[]
-            //        {
-            //        new T().Name,
-            //        serverName ,
-            //        new ServiceParams {Message="Hello from Mars"}
-            //        }
-            //    };
+            var defaultPayloadMessage = new PayloadMessage
+            {
+                Target = "EXEC",
+                Arguments = new object[]
+                {
+                    new T().Name,
+                    serverName ,
+                    new ServiceParams {Message="Hello from Mars"}
+                }
+            };
 
-            //    var response = await httpClient.SendAsync(BuildRequest(defaultPayloadMessage));
-            //    response.EnsureSuccessStatusCode();
-            //}
+            var response = await httpClient.SendAsync(BuildRequest(defaultPayloadMessage));
+
+            if (response.StatusCode != HttpStatusCode.Accepted)
+            {
+                Console.WriteLine($"Sent error: {response.StatusCode}");
+            }
         }
 
         private HttpRequestMessage BuildRequest(PayloadMessage defaultPayloadMessage)
@@ -56,7 +53,7 @@ namespace ServiceOrchestrator.Core
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", security.GenerateAccessToken(url, serverName));
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            request.Content = new StringContent(JsonConvert.SerializeObject(_defaultPayloadMessage), Encoding.UTF8, "application/json");
+            request.Content = new StringContent(JsonConvert.SerializeObject(defaultPayloadMessage), Encoding.UTF8, "application/json");
 
             return request;
         }

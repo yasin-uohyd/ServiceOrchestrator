@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceOrchestrator.Core;
 
@@ -15,9 +16,12 @@ namespace ServiceOne
                 serviceCollection.AddScoped<ITask, ServiceOneTaskOne>();
             });
 
+
             await hostBuilder.StartAsync();
+
             //Just to Start the Flow
-            await new ServiceCoordinator().Raise<CustomServiceOneEvent>(null);
+            var serviceCoordinator = hostBuilder.host.Services.GetRequiredService<IServiceCoordinator>();
+            await serviceCoordinator.Raise<CustomServiceOneEvent>(null);
 
             await hostBuilder.WaitForShutdownAsync();
         }

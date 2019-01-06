@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ServiceOrchestrator
 {
-    public class Security
+    internal class Security
     {
         private static readonly JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
 

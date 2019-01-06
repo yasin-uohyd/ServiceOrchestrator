@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -15,29 +14,27 @@ namespace ServiceOrchestrator
     {
         private HubConnection _connection;
         private const string HubName = "Communicator";
-        private readonly ILogger _logger;
+        private readonly IConfiguration configuration;
+        private readonly ILogger logger;
 
-        public OrchestrationService(IServiceProvider services,
-            ILogger<OrchestrationService> logger)
+        public OrchestrationService(IServiceProvider services, IConfiguration configuration, ILogger<OrchestrationService> logger)
         {
             Services = services;
-            _logger = logger;
+            this.logger = logger;
+            this.configuration = configuration;
         }
 
         public IServiceProvider Services { get; }
 
+        public ILogger Logger => logger;
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Consume Scoped Service Hosted Service is starting.");
-
-            var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("service.json", false, true)
-                    .Build();
+            logger.LogInformation("Orchestration Service is starting.");
 
             var serviceUtils = new Security(configuration["Azure:SignalR:ConnectionString"]);
 
-            var url = GetClientUrl(serviceUtils.Endpoint, HubName);
+            var url = GetHubUrl(serviceUtils.Endpoint, HubName);
 
             _connection = new HubConnectionBuilder()
                 .WithUrl(url, option =>
@@ -48,14 +45,14 @@ namespace ServiceOrchestrator
                     };
                 }).Build();
 
-            RegisterTask();
+            RegisterTasks();
 
             await _connection.StartAsync();
         }
 
-        private void RegisterTask()
+        private void RegisterTasks()
         {
-            _logger.LogInformation("Consume Scoped Service Hosted Service is working.");
+            logger.LogInformation("Orchestration Service is working.");
 
             _connection.On("EXEC",
                 (string eventName, string clientId, ServiceParams message) =>
@@ -76,17 +73,14 @@ namespace ServiceOrchestrator
                 });
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation(
-                "Consume Scoped Service Hosted Service is stopping.");
+            logger.LogInformation("Orchestration Service is stopping.");
 
-            _connection.StopAsync(cancellationToken);
-
-            return Task.CompletedTask;
+            await _connection.StopAsync(cancellationToken);
         }
 
-        private string GetClientUrl(string endpoint, string hubName)
+        private string GetHubUrl(string endpoint, string hubName)
         {
             return $"{endpoint}/client/?hub={hubName}";
         }

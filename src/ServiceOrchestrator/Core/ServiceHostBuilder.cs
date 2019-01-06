@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -7,7 +9,7 @@ namespace ServiceOrchestrator.Core
 {
     public class ServiceHostBuilder
     {
-        private IHost host;
+        public IHost host;
         private readonly IHostBuilder hostBuilder;
 
         private const string HubName = "Communicator";
@@ -19,7 +21,12 @@ namespace ServiceOrchestrator.Core
                                 (hostContext, services) =>
                                 {
                                     services.AddHostedService<OrchestrationService>();
-                                    services.AddScoped<IServiceCoordinator, ServiceCoordinator>();
+                                    services.AddSingleton<IServiceCoordinator, ServiceCoordinator>();
+                                })
+                                .ConfigureAppConfiguration(configure =>
+                                {
+                                    configure.SetBasePath(Directory.GetCurrentDirectory());
+                                    configure.AddJsonFile("service.json", false, true);
                                 })
                             .UseConsoleLifetime();
         }
