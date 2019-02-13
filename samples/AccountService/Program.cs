@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
+using AccountService.Events;
+using AccountService.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceOrchestrator.Core;
 
-namespace ServiceOne
+namespace AccountService
 {
     class Program
     {
@@ -12,7 +14,7 @@ namespace ServiceOne
 
             hostBuilder.Build((hostBuilderConext, serviceCollection) =>
             {
-                serviceCollection.AddScoped<ITask, ServiceOneTaskOne>();
+                serviceCollection.AddScoped<ITask, AccountServiceTaskOne>();
             });
 
 
@@ -20,7 +22,7 @@ namespace ServiceOne
 
             //Just to Start the Flow
             var serviceCoordinator = hostBuilder.host.Services.GetRequiredService<IServiceCoordinator>();
-            await serviceCoordinator.Raise<CustomServiceOneEvent>(new ServiceParams { Message = "Startup", Count = 0 });
+            await serviceCoordinator.Raise<AccountServiceEventOne>(new ServiceParams { Message = "Startup", Count = 0 });
 
             await hostBuilder.WaitForShutdownAsync();
         }

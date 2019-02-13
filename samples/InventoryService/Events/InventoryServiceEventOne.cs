@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using ServiceOrchestrator.Events;
 
-namespace ServiceTwo.Events
+namespace InventoryService.Events
 {
-    class CustomServiceTwoEvent : IServiceEvent
+    public class InventoryServiceEventOne : IServiceEvent
     {
-        public CustomServiceTwoEvent()
+        public InventoryServiceEventOne()
         {
-            Name = "ServiceOneMethodOne";
+            Name = "PaymentServiceMethodTwo";
         }
 
         public Guid CorrelationId { get; set; }
