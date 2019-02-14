@@ -1,0 +1,11 @@
+{
+  "EventHandlers": [
+    {
+      "EventName": "PaymentReceivedEvent",
+      "Handler": {
+        "TaskName": "InventoryServiceTask",
+        "MethodName": "DeliverGoods"
+      }
+    }
+  ]
+}

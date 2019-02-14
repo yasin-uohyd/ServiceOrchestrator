@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using InventoryService.Events;
 using InventoryService.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceOrchestrator.Core;
@@ -13,7 +14,7 @@ namespace InventoryService
 
             hostBuilder.Build((hostBuilderConext, serviceCollection) =>
             {
-                serviceCollection.AddScoped<ITask, InventoryServiceTaskOne>();
+                serviceCollection.AddScoped<ITask, InventoryServiceTask>();
             });
 
             await hostBuilder.StartAsync();

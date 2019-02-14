@@ -4,22 +4,21 @@ using AccountService.Events;
 
 namespace AccountService.Tasks
 {
-    public class AccountServiceTaskOne : ITask
+    public class AccountServiceTask : ITask
     {
         private readonly IServiceCoordinator serviceCoordinator;
 
-        public AccountServiceTaskOne(IServiceCoordinator serviceCoordinator)
+        public AccountServiceTask(IServiceCoordinator serviceCoordinator)
         {
             this.serviceCoordinator = serviceCoordinator;
         }
 
-        public void AccountServiceMethodOne(ServiceParams taskParams)
+        public void UpdateCart(ServiceParams taskParams)
         {
-            Console.WriteLine($"[{DateTime.Now.ToString()}] {nameof(AccountService)}: {nameof(AccountServiceMethodOne)}: Received message from Mars: {taskParams.Message}, count {taskParams.Count}");
-
+            Console.WriteLine($"[{DateTime.Now.ToString("hh:mm:ss.fff tt")}] {nameof(AccountService)}: {nameof(UpdateCart)}: Items are being added to Cart...");
             taskParams.Count++;
-
-            serviceCoordinator.Raise<AccountServiceEventOne>(taskParams).Wait();
+            serviceCoordinator.Raise<CartUpdatedEvent>(taskParams).Wait();
+            Console.WriteLine($"[{DateTime.Now.ToString("hh:mm:ss.fff tt")}] {nameof(AccountService)}: {nameof(UpdateCart)}: Items added to cart...");
         }
     }
 }

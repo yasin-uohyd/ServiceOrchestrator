@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AccountService.Events;
 using AccountService.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ namespace AccountService
 
             hostBuilder.Build((hostBuilderConext, serviceCollection) =>
             {
-                serviceCollection.AddScoped<ITask, AccountServiceTaskOne>();
+                serviceCollection.AddScoped<ITask, AccountServiceTask>();
             });
 
 
@@ -22,7 +23,8 @@ namespace AccountService
 
             //Just to Start the Flow
             var serviceCoordinator = hostBuilder.host.Services.GetRequiredService<IServiceCoordinator>();
-            await serviceCoordinator.Raise<AccountServiceEventOne>(new ServiceParams { Message = "Startup", Count = 0 });
+            await serviceCoordinator.Raise<CartUpdatedEvent>(new ServiceParams { Message = "Startup", Count = 0 });
+            Console.WriteLine("Account Service started...");
 
             await hostBuilder.WaitForShutdownAsync();
         }

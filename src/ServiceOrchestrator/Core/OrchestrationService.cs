@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Linq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ServiceOrchestrator.Core;
+using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 
 namespace ServiceOrchestrator
 {
@@ -59,11 +62,14 @@ namespace ServiceOrchestrator
                 {
                     using (var scope = Services.CreateScope())
                     {
+                        var handlers = GetHandlers(eventName);
+
                         var tasks = scope.ServiceProvider.GetServices<ITask>();
-                        foreach (var task in tasks)
+
+                        foreach (var handler in handlers)
                         {
-                            var test = scope.ServiceProvider.GetRequiredService<IServiceCoordinator>();
-                            var methodInfo = task.GetType().GetMethod(eventName);
+                            var task = tasks.First(t => t.GetType().Name == handler.TaskName);
+                            var methodInfo = task.GetType().GetMethod(handler.MethodName);
                             if (methodInfo != null)
                             {
                                 methodInfo.Invoke(task, new[] { message });
@@ -71,6 +77,23 @@ namespace ServiceOrchestrator
                         }
                     }
                 });
+        }
+
+        private IList<Handler> GetHandlers(string eventName)
+        {
+            var childern = configuration.GetSection("EventHandlers").GetChildren();
+            var handlers = new List<Handler>();
+
+            foreach (var child in childern)
+            {
+                if (eventName == child.GetValue<string>("EventName"))
+                {
+                    handlers.Add(child.GetSection("Handler").Get<Handler>());
+                }
+
+            }
+
+            return handlers;
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

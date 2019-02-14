@@ -13,7 +13,7 @@ namespace PaymentService
 
             hostBuilder.Build((hostBuilderConext, serviceCollection) =>
             {
-                serviceCollection.AddScoped<ITask, PaymentServiceTaskOne>();
+                serviceCollection.AddScoped<ITask, PaymentServiceTask>();
             });
 
             await hostBuilder.StartAsyncAndWait();
