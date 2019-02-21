@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
+using InventoryService.Events;
+using InventoryService.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceOrchestrator.Core;
 
-namespace ServiceOne
+namespace InventoryService
 {
     class Program
     {
@@ -12,17 +14,10 @@ namespace ServiceOne
 
             hostBuilder.Build((hostBuilderConext, serviceCollection) =>
             {
-                serviceCollection.AddScoped<ITask, ServiceOneTaskOne>();
+                serviceCollection.AddScoped<ITask, InventoryServiceTask>();
             });
 
-
             await hostBuilder.StartAsync();
-
-            //Just to Start the Flow
-            var serviceCoordinator = hostBuilder.host.Services.GetRequiredService<IServiceCoordinator>();
-            await serviceCoordinator.Raise<CustomServiceOneEvent>(new ServiceParams { Message = "Startup", Count = 0 });
-
-            await hostBuilder.WaitForShutdownAsync();
         }
     }
 }

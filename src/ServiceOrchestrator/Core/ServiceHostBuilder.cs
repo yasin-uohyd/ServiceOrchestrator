@@ -27,6 +27,7 @@ namespace ServiceOrchestrator.Core
                                 {
                                     configure.SetBasePath(Directory.GetCurrentDirectory());
                                     configure.AddJsonFile("service.json", false, true);
+                                    configure.AddJsonFile("handlers.json", false, true);
                                 })
                             .UseConsoleLifetime();
         }

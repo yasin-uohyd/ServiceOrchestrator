@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceOrchestrator.Core;
-using ServiceTwo.Tasks;
+using PaymentService.Tasks;
 
-namespace ServiceTwo
+namespace PaymentService
 {
     class Program
     {
@@ -13,7 +13,7 @@ namespace ServiceTwo
 
             hostBuilder.Build((hostBuilderConext, serviceCollection) =>
             {
-                serviceCollection.AddScoped<ITask, ServiceTwoTaskOne>();
+                serviceCollection.AddScoped<ITask, PaymentServiceTask>();
             });
 
             await hostBuilder.StartAsyncAndWait();

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using ServiceOrchestrator.Events;
 
-namespace ServiceOne
+namespace ExternalService.Events
 {
-    public class CustomServiceOneEvent : IServiceEvent
+    class OrderCreatedEvent : IServiceEvent
     {
-        public CustomServiceOneEvent()
+        public OrderCreatedEvent()
         {
-            Name = "ServiceTwoMethodOne";
+            Name = "OrderCreatedEvent";
         }
 
         public Guid CorrelationId { get; set; }

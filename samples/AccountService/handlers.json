@@ -1,0 +1,11 @@
+{
+  "EventHandlers": [
+    {
+      "EventName": "OrderCreatedEvent",
+      "Handler": {
+        "TaskName": "AccountServiceTask",
+        "MethodName": "UpdateCart"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "EventHandlers": [
+    {
+      "EventName": "CartUpdatedEvent",
+      "Handler": {
+        "TaskName": "PaymentServiceTask",
+        "MethodName": "MakePayment"
+      }
+    }
+  ]
+}
